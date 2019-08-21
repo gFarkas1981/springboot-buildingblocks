@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.gfarkas.restservices.entities.User;
+import com.gfarkas.restservices.exceptions.UserAlreadyExistsException;
+import com.gfarkas.restservices.exceptions.UserNotFoundException;
 import com.gfarkas.restservices.repositories.UserRepository;
 
 @Service
@@ -25,35 +27,50 @@ public class UserService {
 		
 	}
 	
-	public User createUser(User user) {
+	public User createUser(User user) throws UserAlreadyExistsException{
+		
+		User existingUser = userRepository.findByUsername(user.getUsername());
+		
+		if (existingUser != null) 
+			throw new UserAlreadyExistsException("This user is already exists in repository, please provide another one");
 		
 		return userRepository.save(user);
 		
 	}
 	
 
-	public Optional<User> getUserById(Long id) {
+	public Optional<User> getUserById(Long id) throws UserNotFoundException{
 		
 		Optional<User> user = userRepository.findById(id);
+		
+		if (!user.isPresent()) 
+			throw new UserNotFoundException("User not found in User repository, please provide a correct user ID");
+			
 		return user;	
 		
 	}
 	
 	
-	public User updateUserById(Long id, User user) {
+	public User updateUserById(Long id, User user) throws UserNotFoundException{
+		
+		Optional<User> optionalUser = userRepository.findById(id);
+		
+		if (!optionalUser.isPresent()) 
+			throw new UserNotFoundException("User not found in User repository, please provide a correct user ID");
 		
 		user.setId(id);
 		return userRepository.save(user);
 		
 	}
 	
-	public void deleteUserById(Long id) {
+	public void deleteUserById(Long id) throws UserNotFoundException{
 		
-		if (userRepository.findById(id).isPresent()) {
-			
-			userRepository.deleteById(id);
-			
-		}
+		Optional<User> optionalUser = userRepository.findById(id);
+		
+		if (!optionalUser.isPresent()) 
+			throw new UserNotFoundException("User not found in User repository, please provide a correct user ID");
+		
+		userRepository.deleteById(id);
 		
 	}
 
