@@ -12,19 +12,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "orders")
 public class Order {
-	
+
 	@Id
 	@GeneratedValue
 	private Long orderid;
 	private String orderdescription;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	private User user;
 
 	public Order() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Long getOrderid() {
@@ -50,7 +49,7 @@ public class Order {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
-	
-	
+
+
+
 }

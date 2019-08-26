@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gfarkas.restservices.entities.Order;
 import com.gfarkas.restservices.entities.User;
+import com.gfarkas.restservices.exceptions.OrderNotFoundException;
 import com.gfarkas.restservices.exceptions.UserNotFoundException;
 import com.gfarkas.restservices.repositories.OrderRepository;
 import com.gfarkas.restservices.repositories.UserRepository;
 
 @RestController
-@RequestMapping(value = "users")
+@RequestMapping("/users")
 public class OrderController {
 
 	private UserRepository userRepository;
@@ -45,6 +46,25 @@ public class OrderController {
 		return userOptional.get().getOrders();
 
 	}
+	
+	@GetMapping("/{userid}/orders/{orderid}")
+	public Optional<Order> getOrderByOrderId(@PathVariable Long userid, @PathVariable Long orderid) throws UserNotFoundException, OrderNotFoundException {
+
+		Optional<User> userOptional = userRepository.findById(userid);
+
+		if (!userOptional.isPresent())
+			throw new UserNotFoundException("User not found");
+
+		Optional<Order> orderOptional = orderRepository.findById(orderid);
+
+		if (!orderOptional.isPresent())
+			throw new OrderNotFoundException("Order not found");
+
+		
+		return orderOptional;
+
+	}
+	
 	
 	@PostMapping("{userid}/orders")
 	public Order createOrder(@PathVariable Long userid, @RequestBody Order order) throws UserNotFoundException {
