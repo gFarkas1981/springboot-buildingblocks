@@ -1,9 +1,12 @@
 package com.gfarkas.restservices.entities;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -12,35 +15,39 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 @Table(name = "user")
 public class User {
-	
+
 	@Id
 	@GeneratedValue
 	private long id;
-	
+
 	@NotEmpty(message = "Username is Mandatory, please provide one!")
 	@Column(name = "USER_NAME", length = 50, nullable = false, unique = true)
 	private String username;
-	
+
 	@Size(min = 2, message = "First name must be at least 2 charcters")
 	@Column(name = "FIRST_NAME", length = 50, nullable = false)
 	private String firstname;
-	
+
 	@Column(name = "LAST_NAME", length = 50, nullable = false)
 	private String lastname;
-	
+
 	@Column(name = "EMAIL_ADDRESS", length = 50, nullable = false)
 	private String email;
-	
+
 	@Column(name = "ROLE", length = 50, nullable = false)
 	private String role;
-	
+
 	@Column(name = "SSN", length = 50, nullable = false, unique = true)
 	private String ssn;
-	
-	//No argument constructor
-	public User() {}
-	
-	//Fields constructor
+
+	@OneToMany(mappedBy = "user")
+	private List<Order> orders;
+
+	// No argument constructor
+	public User() {
+	}
+
+	// Fields constructor
 	public User(long id, String username, String firstname, String lastname, String email, String role, String ssn) {
 		super();
 		this.id = id;
@@ -51,8 +58,8 @@ public class User {
 		this.role = role;
 		this.ssn = ssn;
 	}
-	
-	//Getters and setters
+
+	// Getters and setters
 	public long getId() {
 		return id;
 	}
@@ -109,12 +116,19 @@ public class User {
 		this.ssn = ssn;
 	}
 
-	//To stringS
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
+	}
+
+	// To stringS
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname
 				+ ", email=" + email + ", role=" + role + ", ssn=" + ssn + "]";
 	}
-
 
 }
