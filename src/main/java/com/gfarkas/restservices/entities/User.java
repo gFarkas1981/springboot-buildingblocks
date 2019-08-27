@@ -9,16 +9,17 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import javax.validation.constraints.NotEmpty;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.hateoas.ResourceSupport;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class User extends ResourceSupport {
 
 	@Id
 	@GeneratedValue
-	private long id;
+	private long userid;
 
 	@NotEmpty(message = "Username is Mandatory, please provide one!")
 	@Column(name = "USER_NAME", length = 50, nullable = false, unique = true)
@@ -48,9 +49,10 @@ public class User {
 	}
 
 	// Fields constructor
-	public User(long id, String username, String firstname, String lastname, String email, String role, String ssn) {
+	public User(long userid, String username, String firstname, String lastname, String email, String role,
+			String ssn) {
 		super();
-		this.id = id;
+		this.userid = userid;
 		this.username = username;
 		this.firstname = firstname;
 		this.lastname = lastname;
@@ -60,12 +62,12 @@ public class User {
 	}
 
 	// Getters and setters
-	public long getId() {
-		return id;
+	public long getUserId() {
+		return userid;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setUserId(long userid) {
+		this.userid = userid;
 	}
 
 	public String getUsername() {
@@ -127,8 +129,8 @@ public class User {
 	// To stringS
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname
-				+ ", email=" + email + ", role=" + role + ", ssn=" + ssn + "]";
+		return "User [userid=" + userid + ", username=" + username + ", firstname=" + firstname + ", lastname="
+				+ lastname + ", email=" + email + ", role=" + role + ", ssn=" + ssn + "]";
 	}
 
 }
